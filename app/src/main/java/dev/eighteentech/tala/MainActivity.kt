@@ -3,6 +3,7 @@ package dev.eighteentech.tala
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
@@ -18,66 +19,33 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.AndroidEntryPoint
+import dev.eighteentech.tala.entities.Response
+import dev.eighteentech.tala.entities.Response.Uninitialized
+import dev.eighteentech.tala.network.Api
+import dev.eighteentech.tala.ui.components.MainView
 import dev.eighteentech.tala.ui.theme.TalaTheme
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @ExperimentalUnitApi
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel : MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.fetchItems()
         setContent {
-            TalaTheme {
-                Column {
-                    TalaAppBar("TALA")
-                    Column(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)) {
-                        Card(
-                            contentColor = Color.White,
-                            elevation = 4.dp,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(120.dp)
-                        ) {
-
-                        }
-                    }
-                }
-            }
-            // A surface container using the 'background' color from the theme
-            //Surface(color = MaterialTheme.colors.background) {
-            //  Greeting("Android")
-            //77}//
+            MainView(viewModel = viewModel)
         }
     }
 }
 
-@ExperimentalUnitApi
-@Composable
-fun Greeting(name: String) {
-    TalaAppBar(name)
-}
-
-@ExperimentalUnitApi
-@Composable
-fun TalaAppBar(name: String) {
-    TopAppBar({
-        Row {
-            Image(
-                painter = painterResource(R.drawable.tala_circle),
-                contentDescription = "",
-                modifier = Modifier
-                    .height(28.dp)
-                    .width(28.dp)
-                    .padding(end = 8.dp)
-            )
-            Text(
-                text = "$name",
-                fontSize = TextUnit(24f, TextUnitType.Unspecified),
-                fontWeight = FontWeight.Black
-            )
-        }
-    })
-}
 
 @ExperimentalUnitApi
 @Preview(showBackground = true)
@@ -85,20 +53,7 @@ fun TalaAppBar(name: String) {
 fun DefaultPreview() {
     TalaTheme {
         Column {
-            TalaAppBar("TALA")
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)) {
-                Card(
-                    contentColor = Color.White,
-                    elevation = 4.dp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp)
-                ) {
-
-                }
-            }
+           
 
         }
     }

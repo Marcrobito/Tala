@@ -13,5 +13,3 @@ data class Loan(
     val due: Double?,
     val dueDate: Long?,
 )
-
-//num class
